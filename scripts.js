@@ -1,6 +1,7 @@
 const BOARD_BORDER_COLOR = 'black'
 const SNAKE_COLOR = 'lightgreen'
 const SNAKE_BORDER_COLOR = 'darkgreen'
+const GAME_BOARD_BG_COLOR = 'black'
 
 //Get game board element
 const gameBoard = document.getElementById("gameBoard")
@@ -16,6 +17,10 @@ let snake = [
     {x: 110, y: 150}
 ]
 
+//Snake velocity
+let dx = 10
+let dy = 10
+
 //Begin game
 main()
 
@@ -23,13 +28,18 @@ main()
 function main() {
     createBoard()
     renderSnake()
+    moveSnake()
 }
 
 //Function to render the gameboard
 function createBoard() {
+    //Setting background color
+    context.fillStyle = 'black'
     //Setting game board color
     context.strokestyle = BOARD_BORDER_COLOR
 
+    //Fill board with background color 
+    context.fillRect(0, 0, gameBoard.width, gameBoard.height)
     //Render the border around the game board
     context.strokeRect(0, 0, gameBoard.width, gameBoard.height)
 }
@@ -54,4 +64,14 @@ function renderSnake() {
     snake.forEach(element => {
         renderSnakeSegment(element)
     });
+}
+
+//Function that moves the snake forward by popping the end segment and adding new head to the front
+function moveSnake() {
+    //Create new head of snake
+    let head = {x: snake[0].x + dx, y: snake[0].y}
+    //Add new head to the front of the snake
+    snake.unshift(head)
+    //remove last segment of snake
+    snake.pop()
 }
