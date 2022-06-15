@@ -3,6 +3,7 @@ const SNAKE_COLOR = 'lightgreen'
 const SNAKE_BORDER_COLOR = 'darkgreen'
 const GAME_BOARD_BG_COLOR = 'black'
 const GAME_REFRESH_SPEED = 150
+const FOOD_COLOR = 'red'
 
 //Get game board element
 const gameBoard = document.getElementById("gameBoard")
@@ -17,6 +18,9 @@ let snake = [
     {x: 120, y: 150},
     {x: 110, y: 150}
 ]
+
+//Food representation
+let food = {x: 200, y: 200}
 
 //Snake velocity
 let dx = 10
@@ -35,6 +39,12 @@ function main() {
         createBoard()
         renderSnake()
         moveSnake()
+        drawFood()
+        //Checks if food is eaten, if so generate another food at a raondom coordinate on the gameboard
+        if (foodEaten()) {
+            createFood()
+            addSnakeSegment()
+        }
 
         //Call main again
         main()
@@ -86,6 +96,7 @@ function moveSnake() {
     snake.pop()
 }
 
+//Function that handles snake change of direction
 function changeDirection(event) {
     const LEFT_KEY = 37;
     const RIGHT_KEY = 39;
@@ -116,4 +127,54 @@ function changeDirection(event) {
         dx = 0;
         dy = 10;
       }
+}
+
+//Function that creates the food/apple that the snake will eat
+function createFood() {
+    //Randomly generate food coordinates in multiples of 10 due to 10 x 10 gameboard size
+    food.x = Math.floor(Math.random() * 10) * 30
+    food.y = Math.floor(Math.random() * 10) * 30
+}
+
+//Draws food on board
+function drawFood() {
+    //Set color of food
+    context.fillStyle = FOOD_COLOR
+ 
+    //Fill food color
+    context.fillRect(food.x, food.y, 10, 10)
+}
+
+function foodEaten() {
+    const head = snake[0]
+    
+    //If head has same coordinates as food, then it has eaten the food
+    if (head.x === food.x && head.y === food.y) {
+        return true
+    }
+    return false
+}
+
+//Add segment to snake
+function addSnakeSegment() {
+    //Get coordinates of current last segment of snake and second to last segment of snake
+    lastSegment = snake[snake.length - 1]
+    secondLastSegment = snake[snake.length - 2]
+
+    //The difference between last segment and second to last segment determines how to add the segment at the end
+    //If theres snake is going right add segment to left end
+    if ((secondLastSegment.x - lastSegment.x) > 0) { 
+        snake.push({x: lastSegment.x - 10, y: lastSegment.y})
+    }
+    //If snake is going left add segment to right end
+    else if ((secondLastSegment.x - lastSegment.x) < 0) { 
+        snake.push({x: lastSegment.x + 10, y: lastSegment.y})
+    }
+    //If snake is going up add to lower end
+    else if ((secondLastSegment.y - lastSegment.y) < 0) { 
+        snake.push({x: lastSegment.x, y: lastSegment.y + 10})
+    }
+    else if ((secondLastSegment.y - lastSegment.y) > 0) { 
+        snake.push({x: lastSegment.x, y: lastSegment.y - 10})
+    }
 }
