@@ -31,6 +31,9 @@ let score = 0
 //Score element
 let scoreElement = document.getElementById("score")
 
+//End game element
+let endGameMsg = document.getElementById("gameOver")
+
 //Begin game
 main()
 
@@ -41,6 +44,12 @@ document.addEventListener('keydown', changeDirection)
 function main() {
     //Game loop
     setTimeout(function() {
+        //Checks if game has ended
+        if (hasGameEnded()) {
+            endGameMsg.innerHTML = "GAME OVER!"
+            return
+        }
+
         createBoard()
         renderSnake()
         moveSnake()
@@ -137,9 +146,9 @@ function changeDirection(event) {
 
 //Function that creates the food/apple that the snake will eat
 function createFood() {
-    //Randomly generate food coordinates in multiples of 10 due to 10 x 10 gameboard size
-    food.x = Math.floor(Math.random() * 10) * 30
-    food.y = Math.floor(Math.random() * 10) * 30
+    //Randomly generate food coordinates in multiples of 10 due to 10 x 10 unit size
+    food.x = Math.floor(Math.random() * 10) * 40
+    food.y = Math.floor(Math.random() * 10) * 40
 }
 
 //Draws food on board
@@ -190,4 +199,21 @@ function updateScore() {
     //increment score by 10 when food is eaten
     score += 10
     scoreElement.innerHTML = score
+}
+
+//Check conditions for game end: hit the border or snake hits itelf
+function hasGameEnded() {
+    head = snake[0]
+
+    //If snake head is outside border range then game has ended
+    if (head.x > 400 || head.y > 400 || head.x < 0 || head.y < 0) {
+        return true
+    }
+    //If snake head intersets with one of the segments, end game
+    for (i = 1; i < snake.length - 1; i++) {
+        segment = snake[i]
+        if (head.x === segment.x && head.y === segment.y) {
+            return true
+        }
+    }
 }
