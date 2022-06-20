@@ -1,9 +1,21 @@
+.title {
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 15px;
+}
+
 h1 {
     display: inline;
 }
 
 .score {
+    text-align: center;
     margin-bottom: 20px;
+    font-family: 'Fascinate', cursive;
+}
+
+.endMsg {
+    text-align: center;
     font-family: 'Fascinate', cursive;
 }
 
