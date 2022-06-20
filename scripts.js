@@ -26,6 +26,11 @@ let food = {x: 200, y: 200}
 let dx = 10
 let dy = 0
 
+//Score value
+let score = 0
+//Score element
+let scoreElement = document.getElementById("score")
+
 //Begin game
 main()
 
@@ -44,6 +49,7 @@ function main() {
         if (foodEaten()) {
             createFood()
             addSnakeSegment()
+            updateScore()
         }
 
         //Call main again
@@ -177,4 +183,11 @@ function addSnakeSegment() {
     else if ((secondLastSegment.y - lastSegment.y) > 0) { 
         snake.push({x: lastSegment.x, y: lastSegment.y - 10})
     }
+}
+
+//Update player score
+function updateScore() {
+    //increment score by 10 when food is eaten
+    score += 10
+    scoreElement.innerHTML = score
 }
